@@ -1,3 +1,4 @@
+% !TEX root = LBYEC4F-Exp1.tex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{preamble.ltx}
 
@@ -19,7 +20,7 @@
 		\\ 
 		CORTES,~Marc~Jose~L.~(12125296)     & Y & \includegraphics[height=5ex]{NBF_signature}
 		\\ 
-		MASINDA,~Gian~Kyle~G.~(121---)  & N & \includegraphics[height=5ex]{MCR_signature}
+		MASINDA,~Gian~Kyle~G.~(12186228)  & N & \includegraphics[height=5ex]{MCR_signature}
 		\\ 
         SANCHEZ,~Ronan~V.~(121---)  & N & \includegraphics[height=5ex]{MCR_signature}
 		\\ 
@@ -34,7 +35,7 @@
 \hspace{\columnsep}\makebox[\columnwidth]{\hfill}}%
 {} % header
 
-\IEEEpubid{\makebox[\columnwidth]{COURSE CODE - SECTION \hfill DLSU}%
+\IEEEpubid{\makebox[\columnwidth]{LBYEC4F - EK3 \hfill DLSU}%
 \hspace{\columnsep}\makebox[\columnwidth]{ \hfill {\tiny\textcolor[rgb]{0.4,0.4,0.4}{\prsDy}}}} % footer
 
 \maketitle % for making the title area
@@ -138,29 +139,63 @@ No.
 \subsection{How does your implementation in Sec.~\ref{sec:implem} achieve the objectives?}
 By:
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Objective 1 (compare numerical vs. analytical):} 
+  \emph{Exercise 1} applies the Heron/Newton update 
+  \(x_{k+1}=\tfrac12\!\left(x_k+\tfrac{2}{x_k}\right)\) to approximate \(\sqrt{2}\) and
+  compares iterates to the true value; \emph{Exercise 2} builds the Maclaurin partial sums
+  \(S_n=\sum_{k=0}^{n}\tfrac{x^{k}}{k!}\) at \(x=0.5\) and compares to \(\exp(0.5)\);
+  \emph{Exercise 3} computes the closed-form velocity
+  \[
+    v_{\mathrm{ana}}(t)=\frac{mg}{c}\Bigl(1-e^{-\frac{c}{m}t}\Bigr)
+  \]
+  and contrasts it with a numerical solution.
+  \item \textbf{Objective 2 (convergence, accuracy, efficiency):}
+  Convergence is shown via iteration/term-vs-value plots and tables; accuracy uses absolute
+  error tests (e.g., \(10^{-12}\) for \(\sqrt{2}\), \(10^{-6}\) for \(\mathrm{e}^{0.5}\));
+  computational efficiency is inferred from the small number of iterations/terms needed.
+  \item \textbf{Objective 3 (real-world translation—fall with drag):}
+  The model \(m\,\dot v=mg-cv\) with \(m=68~\mathrm{kg}\), \(c=12.5~\mathrm{kg/s}\),
+  \(g=9.8~\mathrm{m/s^2}\) is simulated on \(t\in[0,20]~\mathrm{s}\) and compared pointwise
+  to \(v_{\mathrm{ana}}(t)\), illustrating approach to terminal velocity.
 \end{enumerate}
 	
 \subsection{Why does your implementation in Sec.~\ref{sec:implem} achieve the objectives?}
 Because:
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Exercise 1} Near the root, Newton’s method is quadratically convergent,
+  so \(|x_{k}-\sqrt{2}|\) shrinks rapidly, reaching machine-level accuracy in a few steps.
+  \item \textbf{Exercise 2} For \(\mathrm{e}^x\), the remainder is
+  \(\mathcal{O}\!\bigl(\tfrac{x^{n+1}}{(n+1)!}\bigr)\); factorial growth in the denominator drives
+  fast error decay, achieving the tolerance with few terms.
+  \item \textbf{Exercise 3} The system admits a known solution and a stable
+  explicit-Euler discretization with update
+  \[
+    v_{i+1}=v_i+\Delta t\,\Bigl[g-\frac{c}{m}\,v_i\Bigr],
+  \]
+  which, for \(\Delta t=1~\mathrm{s}\), lies well within the stability margin \(\Delta t<2m/c\).
 \end{enumerate}
 	
 \subsection{How does your evaluation in Sec.~\ref{sec:eval} achieve the objectives?}
 By:
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Error targets and logs:} Each iterate/partial sum is compared to the true value and
+  recorded until the specified tolerance is met, quantifying convergence.
+  \item \textbf{Visual overlays:} Plots show approximation trajectories with horizontal reference
+  lines (Ex.~1–2) and time-series overlays of \(v_{\mathrm{num}}(t)\) vs. \(v_{\mathrm{ana}}(t)\) (Ex.~3).
+  \item \textbf{Side-by-side tables:} For the ODE, tables list \(t_i\), \(v_{\mathrm{ana}}(t_i)\),
+  and \(v_{\mathrm{num}}(t_i)\), exposing any bias or dispersion over time.
 \end{enumerate}
 	
 \subsection{Why does your evaluation in Sec.~\ref{sec:eval}  achieve the objectives?}
 Because:
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Convergence behavior captured:} Ex.~1 exhibits near-quadratic decay of
+  \(|x_k-\sqrt{2}|\); Ex.~2 shows factorial-denominator error decay; Ex.~3 shows both trajectories
+  approaching the same asymptote.
+  \item \textbf{Accuracy verified:} Stopping rules tied to absolute error ensure reports only when
+  tolerances are satisfied; overlays corroborate numerically.
+  \item \textbf{Efficiency evidenced:} Few iterations/terms and a coarse \(\Delta t=1~\mathrm{s}\)
+  already yield small discrepancies; refinement paths (e.g., decreasing \(\Delta t\)) are clear.
 \end{enumerate}
 
 
@@ -168,90 +203,55 @@ Because:
 \subsection{Implementation}
 \label{sec:implem}
 
-Rule of thumb: Implementation is how you made your work; (keywords: implemented, created, made, soldered, programmed, etc.).
-
-
 \subsubsection{What were the materials used?}
-If the presentation would be better and necessary, tabulate your answers here instead of enumeration.
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item MATLAB (base math functions and plotting utilities); constants \(g, m, c\) defined as
+  parameters; iteration logs stored in arrays for tabulation/plotting.
+  \item Source scripts for Ex.~1–3 producing iteration histories, tables, and figures.
 \end{enumerate}
 
 
 \subsubsection{What is the summary of the processes used to make the coursework?}
-If you wrote a program or made a simulation, you must add statements on how the program or simulation functions in this section.	A pseudocode as shown in Table~\ref{tab:calcxn} is a good example.
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Exercise 1} Initialize \(x_0=1\); iterate
+  \(x_{k+1}=\tfrac12\!\left(x_k+\tfrac{2}{x_k}\right)\) until
+  \(\bigl|x_k-\sqrt{2}\bigr|<10^{-12}\); record \((k,x_k)\); plot \(k\) vs. \(x_k\) with a reference line at \(\sqrt{2}\).
+  \item \textbf{Exercise 2} Build \(S_n=\sum_{k=0}^{n}\tfrac{0.5^{k}}{k!}\)
+  for \(n=0,1,\dots\) until \(|S_n-\mathrm{e}^{0.5}|<10^{-6}\); record \((n,S_n)\); plot \(n\) vs. \(S_n\) with
+  a reference line at \(\mathrm{e}^{0.5}\).
+  \item \textbf{Exercise 3} Compute
+  \(v_{\mathrm{ana}}(t)=\tfrac{mg}{c}\bigl(1-e^{-(c/m)t}\bigr)\); propagate Euler
+  \(v_{i+1}=v_i+\Delta t\,[g-(c/m)v_i]\) with \(\Delta t=1~\mathrm{s}\) over \(t=0{:}1{:}20~\mathrm{s}\);
+  tabulate and overlay \(v_{\mathrm{num}}(t)\) vs. \(v_{\mathrm{ana}}(t)\).
 \end{enumerate}
-
-\begin{table}[!b]
-	\caption{Pseudocode for the calculation of $y = x^n$}
-	\label{tab:calcxn}	
-	\centering
-	{\footnotesize
-	\begin{tabular}{lll}
-	\hline
-	\hline
-	{\bfseries Input(s):} & & \\
-	$n$ & : & $n$th power; $n \in \mathbb{Z}^{+}$ \\
-	$x$ & : & base value; $x \in \mathbb{R}^{+}$ \\
-	\hline
-	{\bfseries Output(s):} & & \\
-	$y$ & : & result; $y \in \mathbb{R}^{+}$  \\
-	\hline
-	\hline
-	\\
-	\end{tabular}
-	}
-	\begin{algorithmic}[1]
-	{\footnotesize
-		\REQUIRE $n \geq 0 \vee x \neq 0$
-		\ENSURE $y = x^n$
-		\STATE $y \Leftarrow 1$
-		\IF{$n < 0$}
-				\STATE $X \Leftarrow 1 / x$
-				\STATE $N \Leftarrow -n$
-		\ELSE
-				\STATE $X \Leftarrow x$
-				\STATE $N \Leftarrow n$
-		\ENDIF
-		\WHILE{$N \neq 0$}
-				\IF{$N$ is even}
-						\STATE $X \Leftarrow X \times X$
-						\STATE $N \Leftarrow N / 2$
-				\ELSE[$N$ is odd]
-						\STATE $y \Leftarrow y \times X$
-						\STATE $N \Leftarrow N - 1$
-				\ENDIF
-		\ENDWHILE
-	}
-	\end{algorithmic}
-\end{table}
-
-
-
-
-
-
 
 \subsection{Evaluation}
 \label{sec:eval}
 
-Rule of thumb: Evaluation is how you tested your work for correctness; (keywords: measured, tested, compared, simulated, etc.).
-
 \subsubsection{What were your procedures for evaluating the correct outcome of your coursework?}
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Deterministic error checks (Ex.~1–2):} Compare each iterate/partial sum to the
+  corresponding ground truth; terminate when the absolute error falls below the set tolerance;
+  confirm visually using a horizontal reference line.
+  \item \textbf{Pointwise trajectory comparison (Ex.~3):} For each grid time \(t_i\), compute
+  \(v_{\mathrm{ana}}(t_i)\) and \(v_{\mathrm{num}}(t_i)\), then inspect error trends and the approach to
+  terminal velocity.
 \end{enumerate}
 	
 \subsubsection{What quantities were gathered and how have you obtained them for testing the veracity of your results?}
 \begin{enumerate}
-\item Up to two lines per item.
-\item Up to two lines per item.
+  \item \textbf{Exercise 1:} Iteration index \(k\) and iterate \(x_k\); absolute error
+  \(|x_k-\sqrt{2}|\).
+  \item \textbf{Exercise 2:} Term count \(n\) and partial sum \(S_n\); absolute error
+  \(|S_n-\mathrm{e}^{0.5}|\).
+  \item \textbf{Exercise 3:} Time samples \(t_i\), analytical velocity \(v_{\mathrm{ana}}(t_i)\), and
+  numerical velocity \(v_{\mathrm{num}}(t_i)\). With \(m=68~\mathrm{kg}\), \(c=12.5~\mathrm{kg/s}\),
+  \(g=9.8~\mathrm{m/s^2}\): terminal velocity \(\tfrac{mg}{c}\approx 53.312~\mathrm{m/s}\).
+  At \(t=20~\mathrm{s}\), \(v_{\mathrm{ana}}\approx 51.963~\mathrm{m/s}\),
+  \(v_{\mathrm{num}}\approx 52.395~\mathrm{m/s}\), a difference of \(\approx 0.43~\mathrm{m/s}\)
+  (\(\sim 0.83\%\) high), consistent with explicit-Euler’s discretization bias at \(\Delta t=1~\mathrm{s}\).
 \end{enumerate}
+
 
 
 
